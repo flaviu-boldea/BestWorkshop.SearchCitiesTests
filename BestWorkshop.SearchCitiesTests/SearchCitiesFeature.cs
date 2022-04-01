@@ -38,5 +38,10 @@ namespace BestWorkshop.SearchCitiesTests
         {
 
         }
+
+        [Fact(Skip = "NotImplemented")]
+        public void ShouldReturnAllCitiesWhenTheSearchTextIsAnAsterix()
+        {
+        }
     }
 }
