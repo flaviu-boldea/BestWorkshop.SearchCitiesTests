@@ -1,15 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace BestWorkshop.SearchCitiesTests
 {
     public class SearchCitiesFeature
     {
-        [Theory(Skip = "NotImplemented")]
+        [Theory]
         [InlineData("Va", new[] {"Valencia", "Vancouver"})]
         [InlineData("Val", new[] {"Valencia"})]
         public void GivenAListOfCities_WhenSearch_ThenReturnsCitiesStartingWithSearchText(string searchText, string[] output)
         {
-
+            var sut = new CitiesFinder();
+            var actual = sut.Find(searchText);
+            Assert.Equal(output, actual);
         }
 
         [Theory(Skip = "NotImplemented")]
@@ -42,6 +47,19 @@ namespace BestWorkshop.SearchCitiesTests
         [Fact(Skip = "NotImplemented")]
         public void ShouldReturnAllCitiesWhenTheSearchTextIsAnAsterix()
         {
+        }
+    }
+
+    public class CitiesFinder
+    {
+        private readonly IList<string> _cities = new List<string>()
+        {
+            "Valencia", "Vancouver"
+        };
+
+        public string[] Find(string searchText)
+        {
+            return _cities.Where(c => c.StartsWith(searchText)).ToArray();
         }
     }
 }
