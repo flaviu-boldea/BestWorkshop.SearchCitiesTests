@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -7,12 +6,17 @@ namespace BestWorkshop.SearchCitiesTests
 {
     public class SearchCitiesFeature
     {
+        readonly IList<string> _cities = new List<string>()
+        {
+            "Valencia", "Vancouver", "Brasov", "Sighisoara", "Paris"
+        };
+
         [Theory]
         [InlineData("Va", new[] {"Valencia", "Vancouver"})]
         [InlineData("Val", new[] {"Valencia"})]
         public void GivenAListOfCities_WhenSearch_ThenReturnsCitiesStartingWithSearchText(string searchText, string[] output)
         {
-            var sut = new CitiesFinder();
+            var sut = new CitiesFinder(_cities);
             var actual = sut.Find(searchText);
             Assert.Equal(output, actual);
         }
@@ -44,22 +48,29 @@ namespace BestWorkshop.SearchCitiesTests
 
         }
 
-        [Fact(Skip = "NotImplemented")]
+        [Fact]
         public void ShouldReturnAllCitiesWhenTheSearchTextIsAnAsterix()
         {
+            var sut = new CitiesFinder(_cities);
+            var actual = sut.Find("*");
+            Assert.Equal(_cities, actual);
         }
     }
 
     public class CitiesFinder
     {
-        private readonly IList<string> _cities = new List<string>()
+        private readonly IList<string> _cities = new List<string>();
+
+        public CitiesFinder(IList<string> cities)
         {
-            "Valencia", "Vancouver"
-        };
+            _cities = cities;
+        }
 
         public string[] Find(string searchText)
         {
-            return _cities.Where(c => c.StartsWith(searchText)).ToArray();
+            return searchText == "*" 
+                ? _cities.ToArray() 
+                : _cities.Where(c => c.StartsWith(searchText)).ToArray();
         }
     }
 }
